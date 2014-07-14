@@ -1,1 +1,4 @@
-plugin_build/
+.plugin_build/
+.plugin_build*/
+notebook/
+examples/

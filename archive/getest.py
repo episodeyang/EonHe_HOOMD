@@ -22,7 +22,7 @@ all = group.all()
 
 integrate.mode_standard(dt=0.008)
 
-#dump.dcd(filename="test4", period=100)
+dump.dcd(filename="test4", period=100)
 bdnvt=integrate.bdnvt(group=all, limit =2, T=.01)
 run(50000)
 bdnvt.disable()
@@ -39,8 +39,8 @@ nvt.disable()
 
 p=system.particles
 
-dump.dcd(filename="test_schuster", period=100)
-#X = array([pp.position for pp in p])
-#scatter(X[:, 0], X[:, 1])
-#gca().set_aspect('equal')
-#show()
+#dump.dcd(filename="test_ge.dcd", period=100)
+X = array([pp.position for pp in p])
+scatter(X[:, 0], X[:, 1])
+gca().set_aspect('equal')
+show()
