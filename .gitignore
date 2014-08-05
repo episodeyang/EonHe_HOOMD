@@ -2,3 +2,8 @@
 .plugin_build*/
 notebook/
 examples/
+*.dcd
+*.xml
+*.swp
+*.h5
+*.pyc

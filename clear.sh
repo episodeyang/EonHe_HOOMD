@@ -1,0 +1,2 @@
+rm *.dcd
+rm *.xml
