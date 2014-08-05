@@ -51,8 +51,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // $URL$
 // Maintainer: joaander
 
-#ifndef __EXTERNAL_EVALUATOR_GE_H__
-#define __EXTERNAL_EVALUATOR_GE_H__
+#ifndef __EXTERNAL_EVALUATOR_CONFINEMENT_H__
+#define __EXTERNAL_EVALUATOR_CONFINEMENT_H__
 
 #ifndef NVCC
 #include <string>
@@ -62,7 +62,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <hoomd/hoomd_config.h>
 #include <hoomd/HOOMDMath.h>
 
-/*! \file EvaluatorExternalGe.h
+/*! \file EvaluatorExternalConfinement.h
     \brief Defines the external evaluator class for Confinement potentials
     \details this also serves as the primary documetnation and
     base reference for the implementation of other external evaluators.
@@ -143,7 +143,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     - \a lj2 = alpha * 4.0 * epsilon * pow(sigma,6.0);
 
 */
-class EvaluatorExternalGe
+class EvaluatorExternalConfinement
     {
     public:
         //! Define the parameter type used by this pair potential evaluator
@@ -154,7 +154,7 @@ class EvaluatorExternalGe
             \param _rcutsq Sqauared distance at which the potential goes to 0
             \param _params Per type pair parameters of this potential
         */
-        DEVICE EvaluatorExternalGe(Scalar3 X, const BoxDim& box, const param_type& params)
+        DEVICE EvaluatorExternalConfinement(Scalar3 X, const BoxDim& box, const param_type& params)
             : m_pos(X),
               m_box(box)
             {
@@ -167,7 +167,8 @@ class EvaluatorExternalGe
             \param energy value of the energy
             \param virial array of six scalars for the upper triangular virial tensor
         */
-        DEVICE void evalForceEnergyAndVirial(Scalar3& F, Scalar& energy, Scalar* virial) {
+        DEVICE void evalForceEnergyAndVirial(Scalar3& F, Scalar& energy, Scalar* virial)
+            {
             //Scalar3 a2 = make_scalar3(0,0,0);
             //Scalar3 a3 = make_scalar3(0,0,0);
 
@@ -184,21 +185,19 @@ class EvaluatorExternalGe
          
             Scalar forcepower, forcecoeff, m_pos_squared, m_distance, fmag, costheta, sintheta;
 
-            forcecoeff = m_potentialcoeff * m_potentialpower;
-            forcepower = m_potentialpower - 1.0;
-            m_pos_squared = dot(m_pos,m_pos);
-            m_distance = fast::sqrt(m_pos_squared);
+	    forcecoeff = m_potentialcoeff * m_potentialpower;
+	    forcepower = m_potentialpower-1.0;	
+	    m_pos_squared = dot(m_pos,m_pos);
+ 	    m_distance = fast::sqrt(m_pos_squared);
             costheta = m_pos.x / m_distance;
-            sintheta = m_pos.y / m_distance;
+	    sintheta = m_pos.y / m_distance;
 
-            fmag = forcecoeff*fast::pow(m_distance, forcepower);
-            //fmag = forcecoeff*fast::pow(m_pos.y,forcepower);
+            fmag = forcecoeff*fast::pow(m_distance,forcepower);
 
-            F.x = Scalar(0);
-            F.y = -1 * fmag * sintheta;
-            //F.y = Scalar(-1)*Scalar(fmag);
-            energy = m_potentialcoeff*fast::pow(m_pos.y,m_potentialpower);
-        }
+	    F.x = -1*fmag * costheta;
+	    F.y = -1*fmag * sintheta;
+            energy = m_potentialcoeff*fast::pow(m_distance,m_potentialpower);
+            }
 
         #ifndef NVCC
         //! Get the name of this potential
@@ -207,7 +206,7 @@ class EvaluatorExternalGe
         */
         static std::string getName()
             {
-            return std::string("ge");
+            return std::string("confinement");
             }
         #endif
 
@@ -219,4 +218,4 @@ class EvaluatorExternalGe
     };
 
 
-#endif // __EXTERNAL_EVALUATOR_Ge_H__
+#endif // __EXTERNAL_EVALUATOR_CONFINEMENT_H__
