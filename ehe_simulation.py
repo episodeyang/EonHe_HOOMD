@@ -39,6 +39,9 @@ class eheSimulation():
         self.filename = self.cache.filename
         self.dump_prefix = "system_0003"
 
+    def bind_particles(self):
+        self.all = group.all()
+
     def init_system(self, options, n=1000, L=50, dim=2, min_dist=0.001):
         globals.options = util.dict2obj(**options)
         #globals.options = lambda:None;
@@ -70,14 +73,12 @@ class eheSimulation():
         table = hmd.pair.table(width=table_width)
         table.pair_coeff.set('A', 'A', func=pwrlaw, rmin=rmin, rmax=rmax, coeff=dict(k=k, mpower=-1))
 
-    def finish_setup(self):
-        self.all = group.all()
-
-    def setup_analyzer_and_dump(self, dump_prefix=None, port=55000, period=300):
+    def setup_integrator_analyzer_and_dump(self, dump_prefix=None, port=55000, period=300):
         hmd.dump.dcd(filename=self.dump_prefix + ".dcd", period=100)
         if dump_prefix!=None: self.dump_prefix= dump_prefix;
         # specify integration mode and timesteps dt in real time units
-        hmd.integrate.mode_standard(dt=0.005)
+        self.integrator = hmd.integrate
+        self.integrator.mode_standard(dt=0.005)
         xml = dump.xml(filename=self.dump_prefix + '.xml', vis=True)
 
         try:
@@ -90,9 +91,10 @@ class eheSimulation():
     def run_brownian(self, T=0.01, runs=50000):
         # run brownian dynamics integration method with a step distance limit
         # for a bit to get rid of overlapping particles
-        bdnvt = hmd.integrate.bdnvt(group=self.all, limit=2, T=T)
+        if not hasattr(self, 'bdnvt'):
+            self.bdnvt = self.integrator.bdnvt(group=self.all, limit=2, T=T)
         hmd.run(runs)
-        bdnvt.disable() # you have to stop the integration afterward.
+        self.bdnvt.disable() # you have to stop the integration afterward.
         self.analyzer.disable()
 
     def set_Ts(self):
@@ -107,12 +109,13 @@ class eheSimulation():
 
     def run_aneal(self):
         #reenable normal integration mode
-        hmd.integrate.mode_standard(dt=0.005)
-        nvt = hmd.integrate.nvt(group=self.all, T=variant.linear_interp(self.aneal.steps), tau=0.5)
+        self.integrator.mode_standard(dt=0.005)
+        if not hasattr(self, 'nvt'):
+            self.nvt = self.integrator.nvt(group=self.all, T=variant.linear_interp(self.aneal.steps), tau=0.5)
         self.analyzer.enable()
         hmd.run(self.aneal.last())
         self.analyzer.disable()
-        nvt.disable()
+        self.nvt.disable()
         
     def save_xys(self):
          p = self.system.particles
