@@ -1,4 +1,5 @@
 import os, sys, subprocess
+import numpy as np
 sys.path.append("/mnt/s/_Lib/python/Projects/slab")
 sys.path.append("/mnt/s/_Data/140312 - EonHe M007v5 Trident/analysis")
 sys.path.append("/mnt/s/_Data/140312 - EonHe M007v5 Trident/experiment_M007v5_trident")
@@ -115,7 +116,7 @@ class eheSimulation():
         
     def save_xys(self):
          p = self.system.particles
-         xys = array([pp.position for pp in p])
+         xys = np.array([pp.position for pp in p])
 
          self.cache.new_stack()
          self.cache.post('xys', xys)
