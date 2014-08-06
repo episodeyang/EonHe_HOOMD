@@ -30,14 +30,16 @@ class eheSimulation():
         """script is the __file__ object os the simulation script that calls this method.
         """
         sim_path = os.path.dirname(os.path.realpath(script))
-        print "=================================================="
-        print sim_path
-        print "=================================================="
         self.expt_path = sim_path
-        if prefix != None: self.prefix = prefix
+        self.prefix = prefix
         self.cache = dataCacheProxy(self, newFile=newFile)
         self.filename = self.cache.filename
-        self.dump_prefix = "system_0003"
+        self.data_path = self.cache.path
+        print "=================================================="
+        print self.data_path
+        print "=================================================="
+
+        self.dump_prefix = prefix
 
     def bind_particles(self):
         self.all = group.all()
@@ -117,18 +119,6 @@ class eheSimulation():
         self.analyzer.disable()
         self.nvt.disable()
         
-    def save_xys(self):
+    def get_xys(self):
          p = self.system.particles
-         xys = np.array([pp.position for pp in p])
-
-         self.cache.new_stack()
-         self.cache.post('xys', xys)
-
-
-
-
-
-
-
-
-
+         return np.array([pp.position for pp in p])

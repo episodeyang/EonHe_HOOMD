@@ -1,21 +1,16 @@
 from pylab import *
-import argparse
 from hoomd_script import *
 print globals.options
+print "------------------------======================-----------------------"
 
-parser = argparse.ArgumentParser(description='simulation script')
-parser.add_argument('n', metavar='n', type=int, help='the number of particles simulated')
-parser.add_argument('--resV', metavar='resV', type=int, help='the voltage of the traping potential')
-parser.add_argument('--biasCorrection', dest='biasCorrection', type=float, default=0.30, help='set the ')
-
-args = parser.parse_args()
-n = args.n
-resV = args.resV
-biasCo = args.biasCorrection
-C0 = resV * biasCo * 0.06 
-
-print 'simulating n={} particles at resV={}V.'.format(n, resV)
-print 'the bias correction factor is: {}. The gamma passed in is {} in eV/um'.format(biasCo, C0)
+# args = parser.parse_args()
+# n = args.n
+# resV = args.resV
+# biasCo = args.biasCorrection
+# C0 = resV * biasCo * 0.06 
+# 
+# print 'simulating n={} particles at resV={}V.'.format(n, resV)
+# print 'the bias correction factor is: {}. The gamma passed in is {} in eV/um'.format(biasCo, C0)
 
 options = {'ny': None, 'linear': False, 'notice_level': 2, 'min_cpu': False, 'shared_msg_file': None, 'ignore_display': False, 'msg_file': None, 'nx': None, 'nrank': None, 'nz': None, 'user': [], 'onelevel': False, 'gpu': None, 'gpu_error_checking': False, 'mode': 'gpu', 'autotuner_enable': True, 'autotuner_period': 50000}
 
