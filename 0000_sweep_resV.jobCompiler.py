@@ -10,18 +10,18 @@ from data_cache import dataCacheProxy
 sim = lambda:None;
 sim.expt_path = os.path.dirname(os.path.realpath(__file__))
 sim.prefix = 'simulation'
-job_file = dataCacheProxy(sim, newFile=True, stack_prefix="job_")
-print 'the job file is located at: {}'.format(job_file.path)
+# job_file = dataCacheProxy(sim, newFile=True, stack_prefix="job_")
+# print 'the job file is located at: {}'.format(job_file.path)
 
-resVs = np.linspace(0, 1, 11)
+resVs = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4]
 # ns = map(lambda xp: 10**xp, range(0, 5))
 # jobs = map(lambda n: {'n': n}, ns)
 # job_file.note('simulating different numbers of particles')
 
 jobs = map(lambda resV: {'n': 1000, 'resV': resV, 'resV_correction': 0.7, 'boxL': 50}, resVs)
 jobs[0]['newFile'] = True
-job_file.save_dict('jobs', jobs)
-job_file.note('simulating different trap bias voltages')
+# job_file.set_dict('jobs', jobs)
+# job_file.note('simulating different trap bias voltages')
 
 #this overwrites existing jobfiles.
 jobfilename = os.path.join(sim.expt_path,  'jobs.pkl')

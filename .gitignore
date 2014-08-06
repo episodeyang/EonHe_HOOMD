@@ -7,3 +7,4 @@ examples/
 *.swp
 *.h5
 *.pyc
+*.pkl

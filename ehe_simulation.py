@@ -26,7 +26,7 @@ class step_builder():
         return self.steps[-1][0]
 
 class eheSimulation():
-    def __init__(self, script, prefix='simulation', newFile=True):
+    def __init__(self, script, prefix='simulation', newFile=False):
         """script is the __file__ object os the simulation script that calls this method.
         """
         sim_path = os.path.dirname(os.path.realpath(script))

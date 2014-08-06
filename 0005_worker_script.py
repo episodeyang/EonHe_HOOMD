@@ -33,28 +33,40 @@ if hasattr(config, 'newFile'):
 else:
     eheSim = eheSimulation(__file__)
 
+k = 0.0014
+current_job['k'] = k
 C0 = config.resV * 0.06 * config.resV_correction
+current_job['C0'] = C0
+
 eheSim.cache.find_last_stack()
+print eheSim.cache.current_stack
 try:
     cached_job = eheSim.cache.get_dict('config')
     # not terribly robust way to compare but good enough for now
     if  cached_job != current_job:
         print "creating a new stack for new configuration"
         eheSim.cache.new_stack()
-        eheSim.cache.save_dict('config', current_job)
-except IOError:
+        eheSim.cache.set_dict('config', current_job)
+except IOError as e:
+    eheSim.cache.find_last_stack()
     print 'data file does not exist yet'
-    eheSim.cache.save_dict('config', current_job)
-except KeyError:
+    print e
+    eheSim.cache.set_dict('config', current_job)
+    d = eheSim.cache.get_dict('config')
+    print d
+except KeyError as e:
     print 'current stack does not have configuration'
-    eheSim.cache.save_dict('config', current_job)
+    print e
+    eheSim.cache.set_dict('config', current_job)
+    d = eheSim.cache.get_dict('config')
+    print d
 
 # You can't really run multiple simulation in a single script as of now...
 eheSim.init_system(options, n=config.n, L=config.boxL, dim=2, min_dist=0.001)
-eheSim.bind_particles();
+eheSim.bind_particles()
 
 eheSim.pick_linear_potential(gamma=C0, npower=2)
-eheSim.set_pair(k=0.0014, rmin=0.0005, rmax=19, table_width=1000000)
+eheSim.set_pair(k=k, rmin=0.0005, rmax=19, table_width=1000000)
 eheSim.setup_integrator_analyzer_and_dump(port=55000, period=300)
 # everthing below can be run multiple times.
 # One can NOT change the confinement after the script has started.w
