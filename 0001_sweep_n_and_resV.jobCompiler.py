@@ -14,7 +14,7 @@ sim.prefix = 'simulation'
 # print 'the job file is located at: {}'.format(job_file.path)
 
 resVs = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4]
-ns = [20, 40, 60, 80, 100, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 3000, 4000]
+ns = [6000, 8000, 10000, 14000, 18000, 25000, 40000]
 # jobs = map(lambda n: {'n': n}, ns)
 # job_file.note('simulating different numbers of particles')
 
