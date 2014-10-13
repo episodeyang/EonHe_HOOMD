@@ -9,3 +9,14 @@ The jobCompiler compiles the job parameter list into a list of dictionary object
 ```
 dump file naming format: 0000_simulation_name.jobfile.pkl
 ```
+
+To run a simulation:
+```
+hoomd xxx.jobCompiler.py
+```
+
+or to run a simuation that keeps going even if you log out of the secure shell:
+```
+nohup hoomd xxx.jobCompiler.py &
+```
+

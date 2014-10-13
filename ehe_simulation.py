@@ -118,7 +118,7 @@ class eheSimulation():
         hmd.run(self.aneal.last())
         self.analyzer.disable()
         self.nvt.disable()
-        
+
     def get_xys(self):
          p = self.system.particles
          return np.array([pp.position for pp in p])

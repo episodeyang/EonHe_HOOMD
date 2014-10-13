@@ -8,3 +8,4 @@ examples/
 *.h5
 *.pyc
 *.pkl
+nohup.out
