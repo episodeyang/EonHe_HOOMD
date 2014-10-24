@@ -158,11 +158,12 @@ class EvaluatorExternalPolynomial
             : m_pos(X),
               m_box(box)
             {
-            m_potentialcoeff= params.x;
-            m_potentialpower = params.y;
+                voltage = params.x;
+                m_potentialpower = params.y;
             }
 
-              //! Evaluate the force, energy and virial
+            //! Evaluate the force, energy and virial
+
         /*! \param F force vector
             \param energy value of the energy
             \param virial array of six scalars for the upper triangular virial tensor
@@ -176,28 +177,48 @@ class EvaluatorExternalPolynomial
             F.z = Scalar(0.0);
             energy = Scalar(0.0);
 
+            Scalar v2, v4, v6, v8, v10, v12;
+            v2 = Scalar(-0.0733476854);
+            v4 = Scalar(-0.0579662813);
+            v6 = Scalar(0.0266346134);
+            v8 = Scalar(-0.00509871770);
+            v10 = Scalar( 0.000459827838);
+            v12 = Scalar(-0.0000161105706);
+
             // For this potential, since it uses scaled positions, the virial is always zero.
             for (unsigned int i = 0; i < 6; i++)
                 virial[i] = Scalar(0.0);
 
             //Scalar V_box = m_box.getVolume();
          
-            Scalar forcepower, forcecoeff, m_pos_squared, m_distance, fmag, costheta, sintheta;
+            Scalar forcepower, forcecoeff, x, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12,
+                   m_distance, fmag, costheta, sintheta;
 
-            forcecoeff = m_potentialcoeff * m_potentialpower;
-            forcepower = m_potentialpower - 1.0;
-            m_pos_squared = dot(m_pos,m_pos);
-            m_distance = fast::sqrt(m_pos_squared);
-            costheta = m_pos.x / m_distance;
-            sintheta = m_pos.y / m_distance;
+            x = m_pos.x;
+            x2 = x * x;
+            x3 = x2 * x;
+            x4 = x2 * x2;
+            x5 = x3 * x2;
+            x6 = x3 * x3;
+            x7 = x4 * x3;
+            x8 = x4 * x4;
+            x9 = x5 * x4;
+            x10 = x5 * x5;
+            x11 = x6 * x5;
+            x12 = x6 * x6;
+//            costheta = m_pos.x / m_distance;
+//            sintheta = m_pos.y / m_distance;
 
-            fmag = forcecoeff*fast::pow(m_distance, forcepower);
             //fmag = forcecoeff*fast::pow(m_pos.y,forcepower);
 
-            F.x = Scalar(0);
-            F.y = -1 * fmag * sintheta;
-            //F.y = Scalar(-1)*Scalar(fmag);
-            energy = m_potentialcoeff*fast::pow(m_pos.y,m_potentialpower);
+            F.x = - voltage * (- 2 * v2 * x - 4 * v4 * x3 - 6 * v6 * x5 - 8 * v8 * x7 - 10 * v10 * x9 - 12 * v12 * x11);
+            energy = - voltage * (v2 * x2 + v4 * x4 + v6 * x6 + v8 * x8 + v10 * x10 + v12 * x12 );
+//            energy = v2 *fast::pow(m_pos.y, 2)
+//                   + v4 *fast::pow(m_pos.y, 4)
+//                   + v6 *fast::pow(m_pos.y, 6)
+//                   + v8 *fast::pow(m_pos.y, 8)
+//                   + v10 *fast::pow(m_pos.y, 10)
+//                   + v12 *fast::pow(m_pos.y, 12) ;
         }
 
         #ifndef NVCC
@@ -214,7 +235,7 @@ class EvaluatorExternalPolynomial
     protected:
         Scalar3 m_pos;                //!< particle position
         BoxDim m_box;                 //!< box dimensions
-        Scalar m_potentialcoeff;      //!< gamma
+        Scalar voltage;      //!< gamma
         Scalar m_potentialpower;      //!< n
     };
 

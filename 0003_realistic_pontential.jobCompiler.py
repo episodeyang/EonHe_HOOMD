@@ -7,14 +7,14 @@ import util as util
 # import analysis_util as analysis_util
 from data_cache import dataCacheProxy
 
-sim = lambda:None;
+sim = lambda: None
 sim.expt_path = os.path.dirname(os.path.realpath(__file__))
 sim.prefix = 'simulation'
 # job_file = dataCacheProxy(sim, newFile=True, stack_prefix="job_")
 # print 'the job file is located at: {}'.format(job_file.path)
 
 resVs = np.arange(0.01, 1.4, 0.01)
-ns = [200, 300, 400, 500, 600, 700, 800, 1000, 1200, 1400,  2000, 2500, 3000]
+ns = [1, 2, 3, 100, 200, 300, 400, 500, 600, 700, 800, 1000, 1200, 1400,  2000, 2500, 3000]
 # jobs = map(lambda n: {'n': n}, ns)
 # job_file.note('simulating different numbers of particles')
 
@@ -37,7 +37,8 @@ print 'now compiling the list of jobs to file: ' + jobfilename
 with open(jobfilename, 'wb') as f:
     pickle.dump(jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
 
+script_name = "worker_polynomial_potential.py"
 for i in range(len(jobs)):
-    worker_script = os.path.join(sim.expt_path, 'worker_script.py')
-    print "worker_script", worker_script
-    subprocess.call(['/home/ge/hoomd-install/bin/hoomd', worker_script])
+    script_path = os.path.join(sim.expt_path, script_name)
+    print 'worker script: ', script_path
+    subprocess.call(['/home/ge/hoomd-install/bin/hoomd', script_path])

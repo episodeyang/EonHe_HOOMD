@@ -14,6 +14,7 @@ from hoomd_script import *
 import hoomd_script as hmd
 import hoomd_plugins.evaluators_ext_conf as cylindrical_ext
 import hoomd_plugins.evaluators_ext_ge as linear_ext
+import hoomd_plugins.evaluators_ext_polynomial as polynomial_ext
 
 __author__ = 'yangg_000'
 
@@ -60,6 +61,10 @@ class eheSimulation():
     def pick_cylindrical_potential(self, gamma=0.018, npower=2):
         self.confinement = cylindrical_ext.external.confinement()
         self.confinement.force_coeff.set('A', gamma=gamma, npower=npower)
+
+    def pick_polynomial_potential(self, v=1):
+        self.confinement = polynomial_ext.external.polynomial()
+        self.confinement.force_coeff.set('A', gamma=v, npower=0) #npower is just a placeholder
 
     def set_pair(self, k=0.0014, rmin=0.0005, rmax=19, table_width=1000000):
         # specify interactions between particle pairs

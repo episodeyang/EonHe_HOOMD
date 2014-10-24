@@ -7,7 +7,7 @@ import util as util
 # import analysis_util as analysis_util
 from data_cache import dataCacheProxy
 
-sim = lambda:None;
+sim = lambda: None;
 sim.expt_path = os.path.dirname(os.path.realpath(__file__))
 sim.prefix = 'simulation'
 # job_file = dataCacheProxy(sim, newFile=True, stack_prefix="job_")
@@ -38,6 +38,6 @@ with open(jobfilename, 'wb') as f:
     pickle.dump(jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 for i in range(len(jobs)):
-    worker_script = os.path.join(sim.expt_path, '0005_worker_script.py')
+    worker_script = os.path.join(sim.expt_path, 'worker_script.py')
     print "worker_script", worker_script
     subprocess.call(['/home/ge/hoomd-install/bin/hoomd', worker_script])
